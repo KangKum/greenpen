@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 40;
+}
+
+a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+textarea {
+  resize: none;
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.worry-card {
+  transition: transform 0.2s;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); /* shadow-md */
+  cursor: pointer;
+}
+.worry-card:hover {
+  transform: translateY(0.25rem); /* translate-y-1 = 0.25rem */
+}
+.mainColor {
+  background-color: #0f4c2e;
+}
+
+.subColor {
+  background-color: #efffe8;
+}
+
+.beigeColor {
+  background-color: #fbf9f4;
+}
+
+.beigeColor2 {
+  background-color: #fffcf1;
+}
+
+.mainTextColor {
+  color: #0f4c2e;
+}
+
+.subTextColor {
+  color: #efffe8;
+}
+
+.levelFormRow {
+  width: 66%;
+  height: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.levelFormLeftCell {
+  width: 50%;
+  height: 90%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.levelFormRightCell {
+  width: 50%;
+  height: 90%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
+
+.pointFormRow {
+  width: 66%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pointFormLeftCell {
+  width: 74%;
+  height: 90%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.pointFormRightCell {
+  width: 26%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* src/index.css 또는 원하는 CSS 파일에 추가 */
+::-webkit-scrollbar {
+  width: 2px;
+  background: #ffffff00;
+}
+::-webkit-scrollbar-thumb {
+  background: #ffffff00;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff00;
+}
+.littleBox {
+  overflow-wrap: break-word;
+}
