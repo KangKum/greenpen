@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 export const getPoints = async () => {
   const anonIdGP = localStorage.getItem("anonIdGP");
   try {
-    const res = await fetch(`http://${myDomain}/points/${anonIdGP}`, {
+    const res = await fetch(`${myDomain}/points/${anonIdGP}`, {
       method: "GET",
     });
     const pointsData = await res.json();
@@ -22,7 +22,7 @@ export const getPoints = async () => {
 export const getLevels = async () => {
   const anonIdGP = localStorage.getItem("anonIdGP");
   try {
-    const res = await fetch(`http://${myDomain}/levels/${anonIdGP}`, {
+    const res = await fetch(`${myDomain}/levels/${anonIdGP}`, {
       method: "GET",
     });
     const levelsData = await res.json();
@@ -39,7 +39,7 @@ export const getLevels = async () => {
 export const signupOrLogin = async () => {
   const anonIdGP = uuidv4();
   try {
-    const res = await fetch(`http://${myDomain}/autoSignup`, {
+    const res = await fetch(`${myDomain}/autoSignup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

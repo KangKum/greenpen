@@ -1,2 +1,2 @@
-const myDomain = "GreenPen-env.eba-s2zaexra.ap-northeast-2.elasticbeanstalk.com";
+const myDomain = "https://greenpen-backend.onrender.com";
 export default myDomain;

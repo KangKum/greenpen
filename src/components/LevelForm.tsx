@@ -35,7 +35,7 @@ const LevelForm = ({ setShowLevelForm }: { setShowLevelForm: React.Dispatch<Reac
                   //등급 상승 서버로 전송
                   const anonId = localStorage.getItem("anonIdGP");
                   try {
-                    const res = await fetch(`http://${myDomain}/levelUp/${anonId}`, {
+                    const res = await fetch(`${myDomain}/levelUp/${anonId}`, {
                       method: "GET",
                     });
                     const data = await res.json();

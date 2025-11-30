@@ -12,7 +12,7 @@ const Listening = () => {
 
   const fetchWorryLetters = async () => {
     try {
-      const res = await fetch(`http://${myDomain}/listening`, {
+      const res = await fetch(`${myDomain}/listening`, {
         method: "GET",
       });
       if (res.status === 200) {

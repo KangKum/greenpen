@@ -33,7 +33,7 @@ const Worry = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch(`http://${myDomain}/worry/${worryId}`, {
+      const res = await fetch(`${myDomain}/worry/${worryId}`, {
         method: "GET",
       });
       if (res.status === 200) {
@@ -62,7 +62,7 @@ const Worry = () => {
     }
     // 댓글 등록 로직 추가 가능
     try {
-      const res = await fetch(`http://${myDomain}/worry`, {
+      const res = await fetch(`${myDomain}/worry`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -88,7 +88,7 @@ const Worry = () => {
 
   const makeLikes = async (c: IComment) => {
     try {
-      const res = await fetch(`http://${myDomain}/worry/like/${c._id}/${anonId}`, {
+      const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
         method: "GET",
       });
       if (res.status === 200) {
@@ -103,7 +103,7 @@ const Worry = () => {
 
   const makeDislikes = async (c: IComment) => {
     try {
-      const res = await fetch(`http://${myDomain}/worry/dislike/${c._id}/${anonId}`, {
+      const res = await fetch(`${myDomain}/worry/dislike/${c._id}/${anonId}`, {
         method: "GET",
       });
       if (res.status === 200) {
@@ -118,7 +118,7 @@ const Worry = () => {
 
   const makeAttention = async () => {
     try {
-      const res = await fetch(`http://${myDomain}/worry/${worryId}/${anonId}`, {
+      const res = await fetch(`${myDomain}/worry/${worryId}/${anonId}`, {
         method: "GET",
       });
       const data = await res.json();

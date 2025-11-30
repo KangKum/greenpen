@@ -20,7 +20,7 @@ const Writing = () => {
 
     //서버로 worryLetter 전송
     try {
-      const res = await fetch(`http://${myDomain}/writing`, {
+      const res = await fetch(`${myDomain}/writing`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
