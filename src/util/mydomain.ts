@@ -1,2 +1,2 @@
-const myDomain = "https://greenpen-backend.onrender.com";
+const myDomain = "https://api.greenpen.co.kr";
 export default myDomain;
