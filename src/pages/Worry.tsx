@@ -86,18 +86,50 @@ const Worry = () => {
     }
   };
 
+  // const makeLikes = async (c: IComment) => {
+  //   try {
+  //     const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
+  //       method: "POST",
+  //     });
+  //     if (res.status === 200) {
+  //       fetchComments();
+  //     } else {
+  //       console.error("Failed to like comment. Status:", res.status);
+  //     }
+  //   } catch (err) {
+  //     console.error("Error liking comment:", err);
+  //   }
+  // };
   const makeLikes = async (c: IComment) => {
+    // 1) UI 먼저 즉시 반영 (Optimistic Update)
+    setComments((prev) =>
+      prev.map((item) =>
+        item._id === c._id
+          ? {
+              ...item,
+              likes: c.likes.includes(anonId)
+                ? c.likes.filter((id) => id !== anonId) // 좋아요 취소
+                : [...c.likes, anonId], // 좋아요 추가
+            }
+          : item
+      )
+    );
+
+    // 2) 서버 호출은 뒤에서 진행
     try {
       const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
         method: "POST",
       });
-      if (res.status === 200) {
-        fetchComments();
-      } else {
+
+      if (res.status !== 200) {
         console.error("Failed to like comment. Status:", res.status);
+
+        // 3) 실패하면 UI 롤백
+        fetchComments();
       }
     } catch (err) {
       console.error("Error liking comment:", err);
+      fetchComments(); // 실패 시 원래 데이터 복원
     }
   };
 
