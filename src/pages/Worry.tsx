@@ -89,7 +89,7 @@ const Worry = () => {
   const makeLikes = async (c: IComment) => {
     try {
       const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
-        method: "GET",
+        method: "POST",
       });
       if (res.status === 200) {
         fetchComments();
