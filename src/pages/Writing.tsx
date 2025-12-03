@@ -13,11 +13,11 @@ const Writing = () => {
   const setPoint = useSetAtom(pointAtom);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitWorryLetter = async () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
-
+    setIsLoading(true);
     if (worryLetter.trim() === "") return;
 
     //서버로 worryLetter 전송
@@ -53,6 +53,8 @@ const Writing = () => {
       console.error("Error submitting worry letter:", err);
       setAlertTxt("성공적으로 털어놓았습니다.");
       setShowAlertForm(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
