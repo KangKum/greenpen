@@ -53,3 +53,5 @@ export const signupOrLogin = async () => {
     console.error("Error generating UUID:", err);
   }
 };
+
+export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

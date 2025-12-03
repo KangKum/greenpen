@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { colors, txtColors } from "../util/color";
 import myDomain from "../util/mydomain";
+import { delay } from "../util/functions";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Listening = () => {
   const [worryLetters, setWorryLetters] = useState<
@@ -9,8 +11,11 @@ const Listening = () => {
   >([]);
   const navigate = useNavigate();
   const myAnonId = localStorage.getItem("anonIdGP") || "";
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchWorryLetters = async () => {
+    setIsLoading(true);
+    await delay(800); // 800ms가 보통 적당함
     try {
       const res = await fetch(`${myDomain}/listening`, {
         method: "GET",
@@ -23,6 +28,8 @@ const Listening = () => {
       }
     } catch (err) {
       console.error("Error fetching worry letters:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,7 +37,9 @@ const Listening = () => {
     fetchWorryLetters();
   }, []);
 
-  return (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : (
     <div className="w-full min-h-screen flex flex-col items-center overflow-y-auto">
       <div className="w-[90%] md:w-[50%] flex flex-wrap justify-center mt-10 md:mt-28">
         {worryLetters.map((worry) => (

@@ -6,6 +6,7 @@ import { colors, txtColors } from "../util/color";
 import AlertForm from "../components/AlertForm";
 import myDomain from "../util/mydomain";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { delay } from "../util/functions";
 
 const Writing = () => {
   const [worryLetter, setWorryLetter] = useState("");
@@ -19,7 +20,7 @@ const Writing = () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
     if (worryLetter.trim() === "") return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1000)); // 강제로 2초 delay
+    await delay(800); // 800ms가 보통 적당함
 
     //서버로 worryLetter 전송
     try {
