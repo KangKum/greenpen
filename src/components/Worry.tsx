@@ -5,7 +5,7 @@ import { useSetAtom } from "jotai";
 import { pointAtom } from "../atoms/pointAtom";
 import { colors, txtColors, borderColors } from "../util/color";
 import { levels } from "../util/level";
-import AlertForm from "../components/AlertForm";
+import AlertForm from "./AlertForm";
 import myDomain from "../util/mydomain";
 
 interface IComment {
@@ -209,7 +209,7 @@ const Worry = ({
     <AlertForm alertTxt={alertTxt} setShowAlertForm={setShowAlertForm} />
   ) : (
     <div
-      className="w-full h-full bg-black/50 flex justify-center items-center"
+      className="overlay"
       onClick={() => {
         // navigate(-1);
         setSelectedWorryId(null);

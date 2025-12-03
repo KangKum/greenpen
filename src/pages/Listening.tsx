@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import { colors, txtColors } from "../util/color";
 import myDomain from "../util/mydomain";
-import Worry from "./Worry";
+import Worry from "../components/Worry";
 
 const Listening = () => {
   const [worryLetters, setWorryLetters] = useState<
