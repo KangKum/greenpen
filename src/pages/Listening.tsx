@@ -31,12 +31,12 @@ const Listening = () => {
 
   useEffect(() => {
     fetchWorryLetters();
-  }, [worryLetters.length]);
+  }, []);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center overflow-y-auto">
       {showWorryModal ? (
-        <Worry setShowWorryModal={setShowWorryModal} worryId={selectedWorryId || ""} />
+        <Worry setShowWorryModal={setShowWorryModal} setSelectedWorryId={setSelectedWorryId} worryId={selectedWorryId || ""} />
       ) : (
         <div className="w-[90%] md:w-[50%] flex flex-wrap justify-center mt-10 md:mt-28">
           {worryLetters.map((worry) => (

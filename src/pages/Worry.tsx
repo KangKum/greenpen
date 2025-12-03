@@ -28,7 +28,15 @@ interface IWorry {
   attention: string[];
 }
 
-const Worry = ({ setShowWorryModal, worryId }: { setShowWorryModal: React.Dispatch<React.SetStateAction<boolean>>; worryId: string }) => {
+const Worry = ({
+  setShowWorryModal,
+  setSelectedWorryId,
+  worryId,
+}: {
+  setShowWorryModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedWorryId: React.Dispatch<React.SetStateAction<string | null>>;
+  worryId: string;
+}) => {
   // const navigate = useNavigate();
   // const location = useLocation();
   // const { worryId } = location.state || {};
@@ -204,6 +212,7 @@ const Worry = ({ setShowWorryModal, worryId }: { setShowWorryModal: React.Dispat
       className="w-full h-full bg-black/50 flex justify-center items-center"
       onClick={() => {
         // navigate(-1);
+        setSelectedWorryId(null);
         setShowWorryModal(false);
       }}
     >
