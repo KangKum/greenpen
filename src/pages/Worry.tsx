@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from "react-router-dom";
+// import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPoints } from "../util/functions";
 import { useSetAtom } from "jotai";
@@ -28,10 +28,10 @@ interface IWorry {
   attention: string[];
 }
 
-const Worry = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { worryId } = location.state || {};
+const Worry = ({ setShowWorryModal, worryId }: { setShowWorryModal: React.Dispatch<React.SetStateAction<boolean>>; worryId: string }) => {
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const { worryId } = location.state || {};
   const [thisWorry, setThisWorry] = useState<IWorry>({} as IWorry);
   const [commentTxt, setCommentTxt] = useState("");
   const [comments, setComments] = useState<IComment[]>([]);
@@ -203,7 +203,8 @@ const Worry = () => {
     <div
       className="w-full h-full bg-black/50 flex justify-center items-center"
       onClick={() => {
-        navigate(-1);
+        // navigate(-1);
+        setShowWorryModal(false);
       }}
     >
       <div
