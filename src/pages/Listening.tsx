@@ -14,7 +14,7 @@ const Listening = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchWorryLetters = async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
     // await delay(800);
     try {
       const res = await fetch(`${myDomain}/listening`, {
@@ -29,7 +29,7 @@ const Listening = () => {
     } catch (err) {
       console.error("Error fetching worry letters:", err);
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
