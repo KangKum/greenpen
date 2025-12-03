@@ -15,7 +15,7 @@ const Listening = () => {
 
   const fetchWorryLetters = async () => {
     setIsLoading(true);
-    await delay(800); // 800ms가 보통 적당함
+    // await delay(800);
     try {
       const res = await fetch(`${myDomain}/listening`, {
         method: "GET",
