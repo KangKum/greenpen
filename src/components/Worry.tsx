@@ -41,7 +41,7 @@ const Worry = ({
   const [commentTxt, setCommentTxt] = useState("");
   const [comments, setComments] = useState<IComment[]>([]);
   const setPoint = useSetAtom(pointAtom);
-  const [attentionList, setAttentionList] = useState<string[]>([]);
+  // const [attentionList, setAttentionList] = useState<string[]>([]);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -183,7 +183,13 @@ const Worry = ({
   };
   const makeAttention = async () => {
     // 1) UI 즉시 반영 (Optimistic)
-    setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
+    setThisWorry((prev) => ({
+      ...prev,
+      attention: prev.attention.includes(thisWorry.anonId)
+        ? prev.attention.filter((id) => id !== thisWorry.anonId) // 공감 취소
+        : [...prev.attention, thisWorry.anonId], // 공감 추가
+    }));
+    // setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
 
     // 2) 서버 요청은 뒤에서 실행
     try {
@@ -191,10 +197,8 @@ const Worry = ({
         method: "POST",
       });
       const data = await res.json();
-      if (res.status === 200) {
-        setAttentionList(data.attentionList);
-      } else {
-        console.error("공감 실패");
+      if (res.status !== 200) {
+        console.error("공감 실패:", data.error);
         fetchWorry(); // 실패 시 원래 값 복원
       }
     } catch (err) {
@@ -233,11 +237,11 @@ const Worry = ({
           <div className="blankSpace w-[40%]"></div>
           <button
             className={`attentionPart w-[20%] h-8 md:h-9 text-sm md:text-base border-2 flex justify-center items-center rounded hover:font-medium ${
-              attentionList.includes(thisWorry.anonId) ? "font-bold" : ""
+              thisWorry.attention.includes(thisWorry.anonId) ? "font-bold" : ""
             }`}
             onClick={() => makeAttention()}
           >
-            공감 {attentionList.length}
+            공감 {thisWorry.attention.length}
           </button>
           <div className="datePart w-[40%] h-full flex flex-col items-end text-xs">
             <div>{new Date(thisWorry.writtenDate).toLocaleDateString().slice(0, -1)}</div>
