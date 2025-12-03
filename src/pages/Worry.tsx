@@ -19,18 +19,42 @@ interface IComment {
   dislikes: string[];
   level: number;
 }
+interface IWorry {
+  _id: string;
+  letter: string;
+  writtenDate: string;
+  anonId: string;
+  colorIndex: number;
+  attention: string[];
+}
 
 const Worry = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { worryId, anonId, letter, writtenDate, attention, colorIndex } = location.state || {};
+  const { worryId } = location.state || {};
+  const [thisWorry, setThisWorry] = useState<IWorry>({} as IWorry);
   const [commentTxt, setCommentTxt] = useState("");
   const [comments, setComments] = useState<IComment[]>([]);
   const setPoint = useSetAtom(pointAtom);
-  const [attentionList, setAttentionList] = useState(attention || []);
+  const [attentionList, setAttentionList] = useState<string[]>([]);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
 
+  const fetchWorry = async () => {
+    try {
+      const res = await fetch(`${myDomain}/thisWorry/${worryId}`, {
+        method: "GET",
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        setThisWorry(data);
+      } else {
+        console.error("Failed to fetch worry. Status:", res.status);
+      }
+    } catch (error) {
+      console.error("Failed to fetch worry. Status:", error);
+    }
+  };
   const fetchComments = async () => {
     try {
       const res = await fetch(`${myDomain}/worry/${worryId}`, {
@@ -47,7 +71,6 @@ const Worry = () => {
       console.error("Failed to fetch comments:", error);
     }
   };
-
   const makeComment = async () => {
     // 도배방지
     const commentWriter = localStorage.getItem("anonIdGP");
@@ -67,7 +90,7 @@ const Worry = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ worryId, anonId, commentWriter, commentTxt, commentTime: new Date().toISOString(), likes: [], dislikes: [] }),
+        body: JSON.stringify({ worryId, anonId: thisWorry.anonId, commentWriter, commentTxt, commentTime: new Date().toISOString(), likes: [], dislikes: [] }),
       });
       const data = await res.json();
       if (res.status === 200) {
@@ -85,21 +108,6 @@ const Worry = () => {
       setShowAlertForm(true);
     }
   };
-
-  // const makeLikes = async (c: IComment) => {
-  //   try {
-  //     const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
-  //       method: "POST",
-  //     });
-  //     if (res.status === 200) {
-  //       fetchComments();
-  //     } else {
-  //       console.error("Failed to like comment. Status:", res.status);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error liking comment:", err);
-  //   }
-  // };
   const makeLikes = async (c: IComment) => {
     // 1) UI 먼저 즉시 반영 (Optimistic Update)
     setComments((prev) =>
@@ -107,9 +115,9 @@ const Worry = () => {
         item._id === c._id
           ? {
               ...item,
-              likes: c.likes.includes(anonId)
-                ? c.likes.filter((id) => id !== anonId) // 좋아요 취소
-                : [...c.likes, anonId], // 좋아요 추가
+              likes: c.likes.includes(thisWorry.anonId)
+                ? c.likes.filter((id) => id !== thisWorry.anonId) // 좋아요 취소
+                : [...c.likes, thisWorry.anonId], // 좋아요 추가
             }
           : item
       )
@@ -117,7 +125,7 @@ const Worry = () => {
 
     // 2) 서버 호출은 뒤에서 진행
     try {
-      const res = await fetch(`${myDomain}/worry/like/${c._id}/${anonId}`, {
+      const res = await fetch(`${myDomain}/worry/like/${c._id}/${thisWorry.anonId}`, {
         method: "POST",
       });
 
@@ -132,21 +140,6 @@ const Worry = () => {
       fetchComments(); // 실패 시 원래 데이터 복원
     }
   };
-
-  // const makeDislikes = async (c: IComment) => {
-  //   try {
-  //     const res = await fetch(`${myDomain}/worry/dislike/${c._id}/${anonId}`, {
-  //       method: "GET",
-  //     });
-  //     if (res.status === 200) {
-  //       fetchComments();
-  //     } else {
-  //       console.error("Failed to like comment. Status:", res.status);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error liking comment:", err);
-  //   }
-  // };
   const makeDislikes = async (c: IComment) => {
     // 1) UI 즉시 반영 (Optimistic)
     setComments((prev) =>
@@ -154,9 +147,9 @@ const Worry = () => {
         item._id === c._id
           ? {
               ...item,
-              dislikes: c.dislikes.includes(anonId)
-                ? c.dislikes.filter((id) => id !== anonId) // 싫어요 취소
-                : [...c.dislikes, anonId], // 싫어요 추가
+              dislikes: c.dislikes.includes(thisWorry.anonId)
+                ? c.dislikes.filter((id) => id !== thisWorry.anonId) // 싫어요 취소
+                : [...c.dislikes, thisWorry.anonId], // 싫어요 추가
             }
           : item
       )
@@ -164,7 +157,7 @@ const Worry = () => {
 
     // 2) 서버 요청은 뒤에서 실행
     try {
-      const res = await fetch(`${myDomain}/worry/dislike/${c._id}/${anonId}`, {
+      const res = await fetch(`${myDomain}/worry/dislike/${c._id}/${thisWorry.anonId}`, {
         method: "POST",
       });
 
@@ -177,24 +170,30 @@ const Worry = () => {
       fetchComments(); // 실패 시 롤백
     }
   };
-
   const makeAttention = async () => {
+    // 1) UI 즉시 반영 (Optimistic)
+    setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
+
+    // 2) 서버 요청은 뒤에서 실행
     try {
-      const res = await fetch(`${myDomain}/worry/${worryId}/${anonId}`, {
-        method: "GET",
+      const res = await fetch(`${myDomain}/worry/${worryId}/${thisWorry.anonId}`, {
+        method: "POST",
       });
       const data = await res.json();
       if (res.status === 200) {
         setAttentionList(data.attentionList);
       } else {
         console.error("공감 실패");
+        fetchWorry(); // 실패 시 원래 값 복원
       }
     } catch (err) {
       console.error("Error adding attention:", err);
+      fetchWorry(); // 실패 시 롤백
     }
   };
 
   useEffect(() => {
+    fetchWorry();
     fetchComments();
   }, []);
 
@@ -209,26 +208,26 @@ const Worry = () => {
     >
       <div
         className="w-[90%] h-[70%] md:w-[700px] md:h-[600px] rounded-xl flex flex-col items-center bg-white p-4 overflow-y-auto"
-        style={{ backgroundColor: colors[colorIndex], color: txtColors[colorIndex] }}
+        style={{ backgroundColor: colors[thisWorry.colorIndex], color: txtColors[thisWorry.colorIndex] }}
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <div className="bodyPart w-full min-h-[250px] md:min-h-[350px] flex">{letter}</div>
+        <div className="bodyPart w-full min-h-[250px] md:min-h-[350px] flex">{thisWorry.letter}</div>
 
         <div className="footerPart w-full h-[50px] mb-2 flex items-center">
           <div className="blankSpace w-[40%]"></div>
           <button
             className={`attentionPart w-[20%] h-8 md:h-9 text-sm md:text-base border-2 flex justify-center items-center rounded hover:font-medium ${
-              attentionList.includes(anonId) ? "font-bold" : ""
+              attentionList.includes(thisWorry.anonId) ? "font-bold" : ""
             }`}
             onClick={() => makeAttention()}
           >
             공감 {attentionList.length}
           </button>
           <div className="datePart w-[40%] h-full flex flex-col items-end text-xs">
-            <div>{new Date(writtenDate).toLocaleDateString().slice(0, -1)}</div>
-            <div>{new Date(writtenDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
+            <div>{new Date(thisWorry.writtenDate).toLocaleDateString().slice(0, -1)}</div>
+            <div>{new Date(thisWorry.writtenDate).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</div>
           </div>
         </div>
 
@@ -251,23 +250,29 @@ const Worry = () => {
           <div className="commentPart w-full min-h-20 flex flex-col justify-center items-center">
             {comments.length > 0
               ? comments.map((c) => (
-                  <div key={c.commentTime} className={`w-[97%] mx-auto flex flex-col border-b px-1 mt-2`} style={{ borderColor: borderColors[colorIndex] }}>
+                  <div
+                    key={c.commentTime}
+                    className={`w-[97%] mx-auto flex flex-col border-b px-1 mt-2`}
+                    style={{ borderColor: borderColors[thisWorry.colorIndex] }}
+                  >
                     <div className="w-full flex justify-between mb-1">
-                      <div className="h-full text-sm font-bold">{anonId === c.commentWriter ? "글쓴이" : c.level != null ? levels[c.level] : "낙엽"}</div>
+                      <div className="h-full text-sm font-bold">
+                        {thisWorry.anonId === c.commentWriter ? "글쓴이" : c.level != null ? levels[c.level] : "낙엽"}
+                      </div>
                       <div className="h-full text-xs flex items-center">{new Date(c.commentTime).toLocaleString()}</div>
                     </div>
                     <div className="w-full text-sm">{c.commentTxt}</div>
                     <div className="w-full flex justify-end gap-4 mb-2">
                       <button
                         type="button"
-                        className={`text-sm hover:font-medium ${c.likes.includes(anonId) ? "font-bold" : ""}`}
+                        className={`text-sm hover:font-medium ${c.likes.includes(thisWorry.anonId) ? "font-bold" : ""}`}
                         onClick={async () => makeLikes(c)}
                       >
                         Good {c.likes ? c.likes.length : 0}
                       </button>
                       <button
                         type="button"
-                        className={`text-sm hover:font-medium ${c.dislikes.includes(anonId) ? "font-bold" : ""}`}
+                        className={`text-sm hover:font-medium ${c.dislikes.includes(thisWorry.anonId) ? "font-bold" : ""}`}
                         onClick={async () => makeDislikes(c)}
                       >
                         Bad {c.dislikes ? c.dislikes.length : 0}

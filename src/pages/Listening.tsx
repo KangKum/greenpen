@@ -11,8 +11,6 @@ const Listening = () => {
   const myAnonId = localStorage.getItem("anonIdGP") || "";
 
   const fetchWorryLetters = async () => {
-    // setIsLoading(true);
-    // await delay(800);
     try {
       const res = await fetch(`${myDomain}/listening`, {
         method: "GET",
@@ -25,8 +23,6 @@ const Listening = () => {
       }
     } catch (err) {
       console.error("Error fetching worry letters:", err);
-    } finally {
-      // setIsLoading(false);
     }
   };
 
