@@ -5,6 +5,7 @@ import { pointAtom } from "../atoms/pointAtom";
 import { colors, txtColors } from "../util/color";
 import AlertForm from "../components/AlertForm";
 import myDomain from "../util/mydomain";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Writing = () => {
   const [worryLetter, setWorryLetter] = useState("");
@@ -12,6 +13,7 @@ const Writing = () => {
   const setPoint = useSetAtom(pointAtom);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const submitWorryLetter = async () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
@@ -54,7 +56,9 @@ const Writing = () => {
     }
   };
 
-  return showAlertForm ? (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : showAlertForm ? (
     <AlertForm alertTxt={alertTxt} setShowAlertForm={setShowAlertForm} />
   ) : (
     <div className="w-full h-full flex justify-center md:items-center">
