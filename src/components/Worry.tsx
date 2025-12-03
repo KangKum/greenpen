@@ -45,6 +45,7 @@ const Worry = ({
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [limit, setLimit] = useState(10);
 
   const fetchWorry = async () => {
     setIsLoading(true);
@@ -65,14 +66,13 @@ const Worry = ({
       setIsLoading(false);
     }
   };
-  const fetchComments = async () => {
+  const fetchComments = async (limitNum: number) => {
     try {
-      const res = await fetch(`${myDomain}/worry/${worryId}`, {
+      const res = await fetch(`${myDomain}/worry/${worryId}?limit=${limitNum}`, {
         method: "GET",
       });
       if (res.status === 200) {
         const data = await res.json();
-        // console.log(data);
         setComments(data || []);
       } else {
         console.error("Failed to fetch comments. Status:", res.status);
@@ -109,7 +109,7 @@ const Worry = ({
         setCommentTxt("");
         localStorage.setItem("commentTime", new Date().toISOString());
         // 병렬 처리
-        const [newPoint] = await Promise.all([getPoints(), fetchComments()]);
+        const [newPoint] = await Promise.all([getPoints(), fetchComments(10)]);
         setPoint(newPoint);
       } else {
         setAlertTxt(data.error);
@@ -145,11 +145,11 @@ const Worry = ({
         console.error("Failed to like comment. Status:", res.status);
 
         // 3) 실패하면 UI 롤백
-        fetchComments();
+        fetchComments(10);
       }
     } catch (err) {
       console.error("Error liking comment:", err);
-      fetchComments(); // 실패 시 원래 데이터 복원
+      fetchComments(10); // 실패 시 원래 데이터 복원
     }
   };
   const makeDislikes = async (c: IComment) => {
@@ -175,15 +175,14 @@ const Worry = ({
 
       if (res.status !== 200) {
         console.error("싫어요 실패 → 롤백");
-        fetchComments(); // 실패 시 원래 값 복원
+        fetchComments(10); // 실패 시 원래 값 복원
       }
     } catch (err) {
       console.error("싫어요 오류:", err);
-      fetchComments(); // 실패 시 롤백
+      fetchComments(10); // 실패 시 롤백
     }
   };
   const makeAttention = async () => {
-    const old = attentionList;
     // 1) UI 즉시 반영 (Optimistic)
     setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
 
@@ -197,19 +196,17 @@ const Worry = ({
         setAttentionList(data.attentionList);
       } else {
         console.error("공감 실패");
-        // setAttentionList(old); // 실패 시 원래 값 복원
-        fetchWorry();
+        fetchWorry(); // 실패 시 원래 값 복원
       }
     } catch (err) {
       console.error("Error adding attention:", err);
-      // setAttentionList(old); // 실패 시 롤백
-      fetchWorry();
+      fetchWorry(); // 실패 시 롤백
     }
   };
 
   useEffect(() => {
     fetchWorry();
-    fetchComments();
+    fetchComments(10);
   }, []);
 
   return isLoading ? (
@@ -300,6 +297,15 @@ const Worry = ({
                 ))
               : "댓글이 없습니다"}
           </div>
+          <button
+            className="mt-4 text-sm md:text-base p-2 rounded bg-white/30 w-[50%] md:w-[30%] mx-auto hover:font-bold active:font-bold"
+            onClick={() => {
+              setLimit((prev) => prev + 10);
+              fetchComments(limit + 10);
+            }}
+          >
+            더보기
+          </button>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="w-full h-20 mt-1 mb-2 md:mb-0 md:mt-0 md:h-12 flex flex-col md:flex-row justify-between items-center beigeColor2">
+    <header className="w-full h-20 mt-1 mb-2 md:mb-0 md:mt-0 md:h-12 flex flex-col md:flex-row justify-between items-center beigeColor">
       {showLevelForm && <LevelForm setShowLevelForm={setShowLevelForm} />}
       {showPointForm && <PointForm setShowPointForm={setShowPointForm} />}
       <div className="hidden md:leftDiv md:w-100 md:h-full md:flex md:items-center">

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { colors, txtColors } from "../util/color";
 import myDomain from "../util/mydomain";
 import Worry from "../components/Worry";
@@ -8,14 +7,14 @@ const Listening = () => {
   const [worryLetters, setWorryLetters] = useState<
     Array<{ _id: string; anonId: string; letter: string; writtenDate: string; attention: Array<string>; colorIndex: number }>
   >([]);
-  // const navigate = useNavigate();
   const myAnonId = localStorage.getItem("anonIdGP") || "";
   const [showWorryModal, setShowWorryModal] = useState(false);
   const [selectedWorryId, setSelectedWorryId] = useState<string | null>(null);
+  const [limit, setLimit] = useState(48);
 
-  const fetchWorryLetters = async () => {
+  const fetchWorryLetters = async (limitNum: number) => {
     try {
-      const res = await fetch(`${myDomain}/listening`, {
+      const res = await fetch(`${myDomain}/listening?limit=${limitNum}`, {
         method: "GET",
       });
       if (res.status === 200) {
@@ -30,7 +29,7 @@ const Listening = () => {
   };
 
   useEffect(() => {
-    fetchWorryLetters();
+    fetchWorryLetters(limit);
   }, []);
 
   return (
@@ -43,13 +42,12 @@ const Listening = () => {
             <div
               key={worry._id}
               className={`worry-card letterSmallContainer w-[100px] h-[100px] m-2 md:w-[150px] md:h-[150px] md:m-4 rounded-xl shadow ${
-                worry.anonId === myAnonId ? "border-2" : ""
+                worry.anonId === myAnonId ? "border-b-6 border-white" : ""
               }`}
               style={{ backgroundColor: colors[worry.colorIndex % colors.length], color: txtColors[worry.colorIndex % txtColors.length] }}
               onClick={() => {
                 setSelectedWorryId(worry._id);
                 setShowWorryModal(true);
-                // navigate("/worry", { state: { worryId: worry._id } });
               }}
             >
               <span className="littleBox w-full h-full block items-center p-3 cursor-pointer text-xs md:text-base">
@@ -59,6 +57,15 @@ const Listening = () => {
           ))}
         </div>
       )}
+      <button
+        className="mt-4 text-sm p-2 bg-gray-100 rounded w-[80%] md:w-[45%]"
+        onClick={() => {
+          setLimit((prev) => prev + 24);
+          fetchWorryLetters(limit + 24);
+        }}
+      >
+        더보기
+      </button>
     </div>
   );
 };
