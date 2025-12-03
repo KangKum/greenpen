@@ -28,7 +28,7 @@ const Listening = () => {
 
   useEffect(() => {
     fetchWorryLetters();
-  }, []);
+  }, [worryLetters.length]);
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center overflow-y-auto">

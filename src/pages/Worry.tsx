@@ -203,7 +203,7 @@ const Worry = () => {
     <div
       className="w-full h-full bg-black/50 flex justify-center items-center"
       onClick={() => {
-        navigate("/listening");
+        navigate(-1);
       }}
     >
       <div
