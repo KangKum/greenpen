@@ -7,6 +7,7 @@ import { colors, txtColors, borderColors } from "../util/color";
 import { levels } from "../util/level";
 import AlertForm from "./AlertForm";
 import myDomain from "../util/mydomain";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface IComment {
   _id: string;
@@ -47,8 +48,10 @@ const Worry = ({
   const [attentionList, setAttentionList] = useState<string[]>([]);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchWorry = async () => {
+    setIsLoading(true);
     try {
       const res = await fetch(`${myDomain}/thisWorry/${worryId}`, {
         method: "GET",
@@ -61,6 +64,8 @@ const Worry = ({
       }
     } catch (error) {
       console.error("Failed to fetch worry. Status:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   const fetchComments = async () => {
