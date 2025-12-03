@@ -3,7 +3,7 @@ import { useEffect } from "react";
 // import Home from "./pages/Home";
 import Writing from "./pages/Writing";
 import Listening from "./pages/Listening";
-import Worry from "./pages/Worry";
+// import Worry from "./pages/Worry";
 import Layout from "./components/Layout";
 import { getPoints, getLevels, signupOrLogin } from "./util/functions";
 import { useSetAtom } from "jotai";
@@ -36,7 +36,7 @@ function App() {
           <Route path="/" element={<Writing />} />
           <Route path="/writing" element={<Writing />} />
           <Route path="/listening" element={<Listening />} />
-          <Route path="/worry" element={<Worry />} />
+          {/* <Route path="/worry" element={<Worry />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
