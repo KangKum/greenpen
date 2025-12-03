@@ -1,4 +1,3 @@
-// import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getPoints } from "../util/functions";
 import { useSetAtom } from "jotai";
@@ -38,9 +37,6 @@ const Worry = ({
   setSelectedWorryId: React.Dispatch<React.SetStateAction<string | null>>;
   worryId: string;
 }) => {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const { worryId } = location.state || {};
   const [thisWorry, setThisWorry] = useState<IWorry>({} as IWorry);
   const [commentTxt, setCommentTxt] = useState("");
   const [comments, setComments] = useState<IComment[]>([]);
@@ -107,11 +103,13 @@ const Worry = ({
       });
       const data = await res.json();
       if (res.status === 200) {
+        setAlertTxt("댓글이 등록되었습니다.");
+        setShowAlertForm(true);
         setCommentTxt("");
         localStorage.setItem("commentTime", new Date().toISOString());
-        const newPoint = await getPoints();
+        // 병렬 처리
+        const [newPoint] = await Promise.all([getPoints(), fetchComments()]);
         setPoint(newPoint);
-        await fetchComments();
       } else {
         setAlertTxt(data.error);
         setShowAlertForm(true);
@@ -218,7 +216,6 @@ const Worry = ({
     <div
       className="overlay"
       onClick={() => {
-        // navigate(-1);
         setSelectedWorryId(null);
         setShowWorryModal(false);
       }}
