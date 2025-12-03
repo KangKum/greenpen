@@ -18,9 +18,8 @@ const Writing = () => {
   const submitWorryLetter = async () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
     if (worryLetter.trim() === "") return;
-    console.log(isLoading);
     setIsLoading(true);
-    console.log(isLoading);
+    await new Promise((r) => setTimeout(r, 2000)); // 강제로 2초 delay
 
     //서버로 worryLetter 전송
     try {
