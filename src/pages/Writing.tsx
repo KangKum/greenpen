@@ -18,7 +18,9 @@ const Writing = () => {
   const submitWorryLetter = async () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
     if (worryLetter.trim() === "") return;
+    console.log(isLoading);
     setIsLoading(true);
+    console.log(isLoading);
 
     //서버로 worryLetter 전송
     try {
