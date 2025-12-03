@@ -41,7 +41,7 @@ const Worry = ({
   const [commentTxt, setCommentTxt] = useState("");
   const [comments, setComments] = useState<IComment[]>([]);
   const setPoint = useSetAtom(pointAtom);
-  // const [attentionList, setAttentionList] = useState<string[]>([]);
+  const [attentionList, setAttentionList] = useState<string[]>([]);
   const [showAlertForm, setShowAlertForm] = useState(false);
   const [alertTxt, setAlertTxt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +55,7 @@ const Worry = ({
       if (res.status === 200) {
         const data = await res.json();
         setThisWorry(data);
+        setAttentionList(data.attention);
       } else {
         console.error("Failed to fetch worry. Status:", res.status);
       }
@@ -103,8 +104,8 @@ const Worry = ({
       });
       const data = await res.json();
       if (res.status === 200) {
-        setAlertTxt("댓글이 등록되었습니다.");
         setShowAlertForm(true);
+        setAlertTxt("댓글이 등록되었습니다.");
         setCommentTxt("");
         localStorage.setItem("commentTime", new Date().toISOString());
         // 병렬 처리
@@ -182,14 +183,9 @@ const Worry = ({
     }
   };
   const makeAttention = async () => {
+    const old = attentionList;
     // 1) UI 즉시 반영 (Optimistic)
-    setThisWorry((prev) => ({
-      ...prev,
-      attention: prev.attention.includes(thisWorry.anonId)
-        ? prev.attention.filter((id) => id !== thisWorry.anonId) // 공감 취소
-        : [...prev.attention, thisWorry.anonId], // 공감 추가
-    }));
-    // setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
+    setAttentionList((prev) => (prev.includes(thisWorry.anonId) ? prev.filter((id) => id !== thisWorry.anonId) : [...prev, thisWorry.anonId]));
 
     // 2) 서버 요청은 뒤에서 실행
     try {
@@ -197,13 +193,17 @@ const Worry = ({
         method: "POST",
       });
       const data = await res.json();
-      if (res.status !== 200) {
-        console.error("공감 실패:", data.error);
-        fetchWorry(); // 실패 시 원래 값 복원
+      if (res.status === 200) {
+        setAttentionList(data.attentionList);
+      } else {
+        console.error("공감 실패");
+        // setAttentionList(old); // 실패 시 원래 값 복원
+        fetchWorry();
       }
     } catch (err) {
       console.error("Error adding attention:", err);
-      fetchWorry(); // 실패 시 롤백
+      // setAttentionList(old); // 실패 시 롤백
+      fetchWorry();
     }
   };
 
@@ -237,11 +237,11 @@ const Worry = ({
           <div className="blankSpace w-[40%]"></div>
           <button
             className={`attentionPart w-[20%] h-8 md:h-9 text-sm md:text-base border-2 flex justify-center items-center rounded hover:font-medium ${
-              thisWorry.attention.includes(thisWorry.anonId) ? "font-bold" : ""
+              attentionList.includes(thisWorry.anonId) ? "font-bold" : ""
             }`}
             onClick={() => makeAttention()}
           >
-            공감 {thisWorry.attention.length}
+            공감 {attentionList.length}
           </button>
           <div className="datePart w-[40%] h-full flex flex-col items-end text-xs">
             <div>{new Date(thisWorry.writtenDate).toLocaleDateString().slice(0, -1)}</div>
