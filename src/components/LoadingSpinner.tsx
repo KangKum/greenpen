@@ -1,4 +1,4 @@
-const LoadingSpinner = ({ size = 40, color = "#2b8a3e" }) => (
+const LoadingSpinner = ({ size = 40, color = "#fff" }) => (
   <div className="overlay">
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 40 40" stroke={color}>
       <g fill="none" fillRule="evenodd">
