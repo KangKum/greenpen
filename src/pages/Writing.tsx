@@ -19,7 +19,7 @@ const Writing = () => {
     const anonIdGP = localStorage.getItem("anonIdGP");
     if (worryLetter.trim() === "") return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 2000)); // 강제로 2초 delay
+    await new Promise((r) => setTimeout(r, 1000)); // 강제로 2초 delay
 
     //서버로 worryLetter 전송
     try {
