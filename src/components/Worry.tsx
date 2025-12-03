@@ -210,7 +210,9 @@ const Worry = ({
     fetchComments();
   }, []);
 
-  return showAlertForm ? (
+  return isLoading ? (
+    <LoadingSpinner />
+  ) : showAlertForm ? (
     <AlertForm alertTxt={alertTxt} setShowAlertForm={setShowAlertForm} />
   ) : (
     <div
