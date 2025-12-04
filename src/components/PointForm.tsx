@@ -1,3 +1,5 @@
+import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
+
 const PointForm = ({ setShowPointForm }: { setShowPointForm: React.Dispatch<React.SetStateAction<boolean>> }) => {
   return (
     <div className="overlay" onClick={() => setShowPointForm(false)}>
@@ -24,12 +26,16 @@ const PointForm = ({ setShowPointForm }: { setShowPointForm: React.Dispatch<Reac
         </div>
 
         <div className="pointFormRow">
-          <div className="pointFormLeftCell">Good</div>
+          <div className="pointFormLeftCell">
+            댓글 <LuThumbsUp className="ml-2" />
+          </div>
           <div className="pointFormRightCell">+2p</div>
         </div>
 
         <div className="pointFormRow">
-          <div className="pointFormLeftCell">Bad</div>
+          <div className="pointFormLeftCell">
+            댓글 <LuThumbsDown className="ml-2" />
+          </div>
           <div className="pointFormRightCell">-1p</div>
         </div>
       </div>

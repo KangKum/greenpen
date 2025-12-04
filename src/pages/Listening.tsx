@@ -11,6 +11,8 @@ const Listening = () => {
   const [showWorryModal, setShowWorryModal] = useState(false);
   const [selectedWorryId, setSelectedWorryId] = useState<string | null>(null);
   const [limit, setLimit] = useState(48);
+  const visitedWorries = localStorage.getItem("VisitedWorries");
+  const visitedArray = visitedWorries ? JSON.parse(visitedWorries) : [];
 
   const fetchWorryLetters = async (limitNum: number) => {
     try {
@@ -44,7 +46,10 @@ const Listening = () => {
               className={`worry-card letterSmallContainer w-[100px] h-[100px] m-2 md:w-[150px] md:h-[150px] md:m-4 rounded-xl shadow ${
                 worry.anonId === myAnonId ? "border-b-6 border-white" : ""
               }`}
-              style={{ backgroundColor: colors[worry.colorIndex % colors.length], color: txtColors[worry.colorIndex % txtColors.length] }}
+              style={{
+                backgroundColor: visitedArray.includes(worry._id) ? "#dddddd" : colors[worry.colorIndex % colors.length],
+                color: txtColors[worry.colorIndex % txtColors.length],
+              }}
               onClick={() => {
                 setSelectedWorryId(worry._id);
                 setShowWorryModal(true);
@@ -57,7 +62,7 @@ const Listening = () => {
           ))}
         </div>
       )}
-      <span className="cursor-default text-transparent">그린펜</span>
+      <span className="cursor-default text-transparent text-xs">그린펜 익명 고민 상담</span>
       <button
         className="mt-4 text-sm p-2 bg-gray-100 rounded w-[80%] md:w-[45%]"
         onClick={() => {

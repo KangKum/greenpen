@@ -7,7 +7,14 @@ import { levels } from "../util/level";
 import AlertForm from "./AlertForm";
 import myDomain from "../util/mydomain";
 import LoadingSpinner from "./LoadingSpinner";
+import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
 
+{
+  /* <LuThumbsUp /> */
+}
+{
+  /* <LuThumbsDown /> */
+}
 interface IComment {
   _id: string;
   commentTxt: string;
@@ -203,10 +210,28 @@ const Worry = ({
       fetchWorry(); // 실패 시 롤백
     }
   };
+  const addVisited = (worryId: string) => {
+    const visited = localStorage.getItem("VisitedWorries");
+    let visitedArray = visited ? JSON.parse(visited) : [];
+    if (!visitedArray.includes(worryId)) {
+      visitedArray.push(worryId);
+      localStorage.setItem("VisitedWorries", JSON.stringify(visitedArray));
+    }
+  };
+  const formatYMDHM = (dateStr: string) => {
+    const d = new Date(dateStr);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    return `${yyyy}.${mm}.${dd}. ${hh}:${min}`;
+  };
 
   useEffect(() => {
     fetchWorry();
     fetchComments(10);
+    addVisited(worryId);
   }, []);
 
   return isLoading ? (
@@ -249,8 +274,8 @@ const Worry = ({
         <div className="bottomPart w-full flex flex-col">
           <form className="w-full min-h-32 flex flex-col">
             <textarea
-              className="w-full h-[75%] px-2 py-1 overflow-y-auto rounded text-black"
-              style={{ backgroundColor: "rgba(255,255,255,0.8)" }}
+              className="w-full h-[75%] px-2 py-1 overflow-y-auto rounded-lg text-black"
+              style={{ backgroundColor: "rgba(255,255,255,0.7)" }}
               spellCheck={false}
               value={commentTxt}
               onChange={(e) => setCommentTxt(e.target.value)}
@@ -274,23 +299,27 @@ const Worry = ({
                       <div className="h-full text-sm font-bold">
                         {thisWorry.anonId === c.commentWriter ? "글쓴이" : c.level != null ? levels[c.level] : "낙엽"}
                       </div>
-                      <div className="h-full text-xs flex items-center">{new Date(c.commentTime).toLocaleString()}</div>
+                      <div className="h-full text-xs flex items-center">{formatYMDHM(c.commentTime)}</div>
                     </div>
                     <div className="w-full text-sm">{c.commentTxt}</div>
                     <div className="w-full flex justify-end gap-4 mb-2">
                       <button
                         type="button"
-                        className={`text-sm hover:font-medium ${c.likes.includes(thisWorry.anonId) ? "font-bold" : ""}`}
+                        className={`text-sm hover:font-medium flex justify-center items-center gap-0.5 ${
+                          c.likes.includes(thisWorry.anonId) ? "font-bold" : ""
+                        }`}
                         onClick={async () => makeLikes(c)}
                       >
-                        Good {c.likes ? c.likes.length : 0}
+                        <LuThumbsUp className="flex justify-center items-center" /> <span className="flex">{c.likes ? c.likes.length : 0}</span>
                       </button>
                       <button
                         type="button"
-                        className={`text-sm hover:font-medium ${c.dislikes.includes(thisWorry.anonId) ? "font-bold" : ""}`}
+                        className={`text-sm hover:font-medium flex justify-center items-center gap-0.5 ${
+                          c.dislikes.includes(thisWorry.anonId) ? "font-bold" : ""
+                        }`}
                         onClick={async () => makeDislikes(c)}
                       >
-                        Bad {c.dislikes ? c.dislikes.length : 0}
+                        <LuThumbsDown className="flex justify-center items-center" /> <span className="flex">{c.dislikes ? c.dislikes.length : 0}</span>
                       </button>
                     </div>
                   </div>
