@@ -93,12 +93,14 @@ const Writing = () => {
         <div className="downPart w-[90%] h-[20%] mx-auto flex justify-center items-center">
           <div className="blankSpace w-[30%] h-full"></div>
           <div className="w-[40%] h-full flex justify-center items-center">
+            <span className="cursor-default text-transparent">그린펜</span>
             <button
               className={`w-18 h-8 text-sm md:w-20 md:h-10 md:text-base rounded-xl text-gray-500 hover:text-gray-700 beigeColor2 shadow active:translate-y-0.5 transition-transform duration-100`}
               onClick={() => submitWorryLetter()}
             >
               털어놓기
             </button>
+            <span className="cursor-default text-transparent">그린펜</span>
           </div>
           <div className="w-[30%] h-full flex justify-end items-center">
             <button

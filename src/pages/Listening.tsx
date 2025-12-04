@@ -57,6 +57,7 @@ const Listening = () => {
           ))}
         </div>
       )}
+      <span className="cursor-default text-transparent">그린펜</span>
       <button
         className="mt-4 text-sm p-2 bg-gray-100 rounded w-[80%] md:w-[45%]"
         onClick={() => {
