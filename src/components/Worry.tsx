@@ -253,7 +253,7 @@ const Worry = ({
           e.stopPropagation();
         }}
       >
-        <div className="bodyPart w-full min-h-[250px] md:min-h-[350px] flex whitespace-pre-wrap">{thisWorry.letter}</div>
+        <div className="bodyPart w-full mb-10 md:mb-12 flex whitespace-pre-wrap">{thisWorry.letter}</div>
 
         <div className="footerPart w-full h-[50px] mb-2 flex items-center">
           <div className="blankSpace w-[40%]"></div>
